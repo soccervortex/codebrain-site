@@ -32,6 +32,8 @@ const mode=document.querySelector("#mode");
 const submit=document.querySelector("#submit");
 const toggle=document.querySelector("#toggle");
 const message=document.querySelector("#message");
+  const emailInput=document.querySelector("#email");
+  const passwordInput=document.querySelector("#password");
 
 toggle.onclick=e=>{
  e.preventDefault();
@@ -51,7 +53,7 @@ form.onsubmit=async e=>{
    method:"POST",
    headers:{"Content-Type":"application/json"},
    credentials:"include",
-   body:JSON.stringify({email:email.value,password:password.value})
+   body:JSON.stringify({email:emailInput.value,password:passwordInput.value})
   });
   const data=await response.json();
   if(!response.ok)throw new Error(data.error||"Request failed");
