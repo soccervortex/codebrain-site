@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CodeBrain - Dashboard</title>
+<style>
+body{margin:0;background:#050608;color:#f4f7fb;font-family:system-ui,-apple-system,sans-serif}
+main{max-width:900px;margin:80px auto;padding:24px}
+.card{padding:28px;border:1px solid #20242c;border-radius:18px;background:#0b0e13}
+h1{margin-top:0}p{color:#8d98a8}
+</style>
+</head>
+<body>
+<main>
+<section class="card">
+<h1>CodeBrain Dashboard</h1>
+<p id="status">Checking session...</p>
+</section>
+</main>
+<script>
+const API="https://codebrain-waitlist-api.drmizayt.workers.dev";
+fetch(API+"/auth/me",{credentials:"include"})
+.then(async response=>{
+ const data=await response.json();
+ if(!response.ok)throw new Error();
+ document.querySelector("#status").textContent="Signed in as "+data.email;
+})
+.catch(()=>location.href="auth.html");
+</script>
+</body>
+</html>

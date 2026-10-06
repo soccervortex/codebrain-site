@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CodeBrain - Account</title>
+<style>
+body{margin:0;background:#050608;color:#f4f7fb;font-family:system-ui,-apple-system,sans-serif;display:grid;place-items:center;min-height:100vh}
+.card{width:min(420px,calc(100% - 32px));padding:32px;border:1px solid #20242c;border-radius:20px;background:#0b0e13}
+h1{margin:0 0 8px}p{color:#8d98a8}input,button{width:100%;box-sizing:border-box;padding:13px;margin-top:12px;border-radius:10px;border:1px solid #303640;background:#11151b;color:#fff}button{background:#58a6ff;color:#050608;font-weight:700;cursor:pointer}
+#message{min-height:24px;margin-top:14px}
+a{color:#58a6ff}
+</style>
+</head>
+<body>
+<main class="card">
+<h1>CodeBrain</h1>
+<p id="mode">Create your account</p>
+<form id="auth">
+<input id="email" type="email" placeholder="you@company.com" required>
+<input id="password" type="password" placeholder="Password" minlength="8" required>
+<button id="submit">Create account</button>
+</form>
+<p id="message"></p>
+<p><a href="#" id="toggle">Already have an account? Log in</a></p>
+</main>
+<script>
+const API="https://codebrain-waitlist-api.drmizayt.workers.dev";
+let login=false;
+const form=document.querySelector("#auth");
+const mode=document.querySelector("#mode");
+const submit=document.querySelector("#submit");
+const toggle=document.querySelector("#toggle");
+const message=document.querySelector("#message");
+
+toggle.onclick=e=>{
+ e.preventDefault();
+ login=!login;
+ mode.textContent=login?"Log in to your account":"Create your account";
+ submit.textContent=login?"Log in":"Create account";
+ toggle.textContent=login?"Need an account? Create one":"Already have an account? Log in";
+ message.textContent="";
+};
+
+form.onsubmit=async e=>{
+ e.preventDefault();
+ submit.disabled=true;
+ message.textContent="";
+ try{
+  const response=await fetch(API+(login?"/auth/login":"/auth/register"),{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   credentials:"include",
+   body:JSON.stringify({email:email.value,password:password.value})
+  });
+  const data=await response.json();
+  if(!response.ok)throw new Error(data.error||"Request failed");
+  location.href="dashboard.html";
+ }catch(error){
+  message.textContent=error.message;
+ }finally{
+  submit.disabled=false;
+ }
+};
+</script>
+</body>
+</html>
