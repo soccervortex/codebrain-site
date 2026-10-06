@@ -111,7 +111,7 @@ async function handleLogin(request, env) {
   const tokenHash = await sha256(token);
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
   await env.codebrain_waitlist.prepare("INSERT INTO sessions (user_id, token_hash, expires_at) VALUES (?, ?, ?)").bind(user.id, tokenHash, expiresAt).run();
-  return new Response(JSON.stringify({ ok: true }), { status: 200, headers: { "Content-Type": "application/json", "Set-Cookie": `codebrain_session=${token}; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=604800`, ...cors() } });
+  return new Response(JSON.stringify({ ok: true, token }), { status: 200, headers: { "Content-Type": "application/json", "Set-Cookie": `codebrain_session=${token}; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=604800`, ...cors() } });
 }
 
 async function handleMe(request, env) {

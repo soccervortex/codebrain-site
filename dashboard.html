@@ -20,7 +20,7 @@ h1{margin-top:0}p{color:#8d98a8}
 </main>
 <script>
 const API="https://codebrain-waitlist-api.drmizayt.workers.dev";
-fetch(API+"/auth/me",{credentials:"include"})
+fetch(API+"/auth/me",{credentials:"include",headers:{"Authorization":"Bearer "+(localStorage.getItem("codebrain_token")||"")}})
 .then(async response=>{
  const data=await response.json();
  if(!response.ok)throw new Error();
