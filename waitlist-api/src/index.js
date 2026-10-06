@@ -116,10 +116,12 @@ async function handleLogin(request, env) {
 
 async function handleMe(request, env) {
   const cookie = request.headers.get("Cookie") || "";
+  const bearer = request.headers.get("Authorization") || "";
   const match = cookie.match(/(?:^|;\s*)codebrain_session=([^;]+)/);
-  if (!match) return json({ error: "Unauthorized" }, 401);
+  const token = bearer.startsWith("Bearer ") ? bearer.slice(7) : (match ? match[1] : null);
+  if (!token) return json({ error: "Unauthorized" }, 401);
 
-  const tokenHash = await sha256(match[1]);
+  const tokenHash = await sha256(token);
   const session = await env.codebrain_waitlist
     .prepare("SELECT users.id, users.email FROM sessions JOIN users ON users.id = sessions.user_id WHERE sessions.token_hash = ? AND sessions.expires_at > datetime('now')")
     .bind(tokenHash)
