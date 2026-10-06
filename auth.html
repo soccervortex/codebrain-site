@@ -57,6 +57,7 @@ form.onsubmit=async e=>{
   });
   const data=await response.json();
   if(!response.ok)throw new Error(data.error||"Request failed");
+  if(data.token)localStorage.setItem("codebrain_token",data.token);
   location.href="dashboard.html";
  }catch(error){
   message.textContent=error.message;
